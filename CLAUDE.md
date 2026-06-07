@@ -82,6 +82,22 @@
 
 ---
 
+## Code Annotation Conventions
+
+> These decorators can appear in any file — source code, feature docs, or config. Claude scans for them during code review and acts on them in place.
+
+| Decorator | Intent | Claude's behavior |
+|---|---|---|
+| `@TODO` | An action Claude should take | Execute the action if intent is clear. If ambiguous, or if a decision is required, prompt the user before acting. |
+| `@Q` | A question for Claude to answer | Answer in chat and discuss. Once resolved, replace the `@Q` comment with a permanent clarifying comment. |
+
+**Rules:**
+- Never act on an `@TODO` that could have multiple valid interpretations without confirming first.
+- Never leave an `@Q` in place after the question is resolved — always replace it.
+- When replacing `@Q`, write a comment that would help a future reader, not one that references the conversation.
+
+---
+
 ## Session Start Checklist
 
 When beginning a new session, Claude should:

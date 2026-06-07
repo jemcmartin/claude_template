@@ -139,6 +139,34 @@ Don't skip the acceptance criteria step. This is what makes tests meaningful.
 
 ---
 
+## Inline Code Annotations
+
+You can leave annotations directly in your code or docs and Claude will act on them when you ask for a code review.
+
+### `@TODO` — action items for Claude
+
+Drop an `@TODO` anywhere you want Claude to do something:
+
+```ts
+// @TODO add input validation here
+function saveUser(data: any) { ... }
+```
+
+When you run a review, Claude will either execute the action or — if the intent is unclear or a decision is needed — ask you before doing anything.
+
+### `@Q` — questions for Claude
+
+Drop an `@Q` anywhere you want an explanation or want to think something through:
+
+```ts
+// @Q why does this need to be async if we're not awaiting anything?
+function loadConfig() { ... }
+```
+
+Claude will answer in chat and discuss with you. Once the question is resolved, Claude replaces the `@Q` with a permanent clarifying comment — something useful to a future reader, not a transcript of the conversation.
+
+---
+
 ## Tips
 
 **On mockups:** If you submit a mockup or diagram, Claude will describe its interpretation back to you before building. Always confirm this is correct — catching a misread early saves significant rework. You can paste images directly into the Claude Code chat panel.
