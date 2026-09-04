@@ -1,106 +1,155 @@
 # CLAUDE.md — Project Brain
 
-> **This file starts blank. Don't fill it in manually.**
-> Use the kickoff prompt in README.md to have Claude interview you and populate this file through conversation.
-> Once populated, this becomes the source of truth for the project — Claude reads it at the start of every session.
-> Keep it updated. It should always reflect the current state of the build.
+> **This file starts blank. Don't fill it in by hand.**
+> Run `/kickoff` and let Claude interview you.
+>
+> Claude loads this file at the start of every session, so it is the single most valuable
+> document in the repo — and the most expensive to get wrong. Keep it **short and true**.
+> Detail belongs in the documents it points to. A stale line here misleads every future
+> session; when in doubt, delete rather than let it rot.
+
+---
+
+## Operating Rules
+
+> How Claude works in this repo. These apply to every session, before anything else.
+
+1. **Read before writing.** At session start read this file and `docs/CONSTITUTION.md`, plus
+   the active feature's `spec.md` / `plan.md` / `tasks.md` if one is in progress. `/prime`
+   does this.
+2. **Spec before code.** Non-trivial work follows the pipeline:
+   `/specify` → `/clarify` → `/plan` → `/tasks` → `/implement` → `/verify` → `/ship`.
+   Each phase gates the next. Skipping a gate is the user's call to make, not Claude's.
+3. **Surface ambiguity, never guess.** Underspecified requirements get
+   `[NEEDS CLARIFICATION: <question>]` in the spec. A proposed default is fine — a silent
+   decision buried in code is not.
+4. **The constitution is binding.** If a plan violates `docs/CONSTITUTION.md`, raise the
+   conflict. Change the plan or amend the constitution; never proceed past it quietly.
+5. **Keep the documents in step with the code.** Spec, plan, tasks, and this file are updated
+   as part of the work, not afterwards. If the build proves the spec wrong, fix the spec.
+6. **Report honestly.** Failing tests are reported with their output. Skipped steps are named.
+   Never weaken a test to make it pass, and never claim verification you didn't do.
+7. **Stay in scope.** Unrelated problems get flagged, not fixed in passing.
 
 ---
 
 ## Project Overview
 
 **What is this?**
-<!-- One paragraph. What does this app do, who is it for, what problem does it solve? -->
+<!-- One paragraph. What it is, who it's for, what problem it removes. -->
 
 **What does "done" look like?**
-<!-- Describe the end state you're working toward, even if loosely. -->
+<!-- The v1 finish line, concretely enough to tell whether you've crossed it. -->
+
+**Who uses it:**
+<!-- Roles and what each one actually does with it. -->
 
 ---
 
 ## Tech Stack
 
-| Layer | Choice | Why |
-|---|---|---|
-| Frontend | | |
-| Backend | | |
-| Database | | |
-| Auth | | |
-| Hosting | | |
-| Testing | | |
+| Layer | Choice | Why | Status |
+|---|---|---|---|
+| Frontend | | | Decided / Undecided |
+| Backend | | | |
+| Database | | | |
+| Auth | | | |
+| Hosting | | | |
+| Testing | | | |
 
 **Key constraints:**
-<!-- Things Claude should never change or work around. e.g. "Always use environment variables for secrets", "No third-party UI libraries" -->
+<!-- Deadlines, compliance, budget, existing systems, things ruled out. -->
+
+**Undecided:** <!-- List them plainly. A recorded unknown is useful; a forgotten one is a trap. -->
 
 ---
 
 ## Current State
 
-**What's been built:**
-<!-- Brief summary of what exists and works today. Update after every feature. -->
+**Shipped:**
+<!-- Feature IDs and one line each. Detail lives in FEATURE_LOG.md. -->
 
-**What's in progress:**
-<!-- Feature currently being worked on. Link to its feature file. -->
+**In progress:**
+<!-- FEAT_NNN, its phase, and where it stopped. -->
 
-**What's next (rough):**
-<!-- Optional loose backlog. Not a contract, just intent. -->
+**Next up (rough):**
+<!-- Direction, not commitment. -->
 
 ---
 
 ## Pending Action Items
 
-> These are things **you** need to do before certain features can be built or tested.
-> Check them off as you complete them.
+> Things **you** must do. Claude can't. Blocking items stop a build; non-blocking ones don't.
 
-- [ ] <!-- Example: Create Google OAuth client ID -->
-- [ ] <!-- Example: Set up hosting environment -->
+| # | Item | Blocking | Needed for | Done |
+|---|---|---|---|---|
+| | | | | [ ] |
 
 ---
 
 ## Architecture Decisions
 
-> A running log of key decisions and why they were made.
-> Claude should not reverse these without discussion.
+> Index only — one line each. Full reasoning lives in `docs/adr/`.
+> Claude does not reverse anything listed here without raising it first.
 
-| Decision | Rationale | Date |
-|---|---|---|
-| | | |
+| Decision | Rationale | ADR | Date |
+|---|---|---|---|
+| | | | |
 
 ---
 
 ## How to Run This Project
 
 ```bash
-# Install dependencies
-# fill in
-
+# Install
 # Run locally
-# fill in
-
 # Run tests
-# fill in
+# Lint / typecheck
 ```
+
+<!-- Keep these commands working. Claude runs them; wrong commands waste a whole session. -->
+
+---
+
+## Map of the Repo
+
+| Path | What's there |
+|---|---|
+| `docs/CONSTITUTION.md` | Non-negotiable project rules. Read before planning. |
+| `docs/ARCHITECTURE.md` | System shape, components, data model, invariants, known debt. |
+| `docs/GLOSSARY.md` | Domain vocabulary. Specs, code, and UI use these exact terms. |
+| `docs/adr/` | Architecture decision records. |
+| `docs/features/` | One folder per feature: spec, plan, tasks, assets. |
+| `FEATURE_LOG.md` | Archive of what shipped and why. |
+| `.claude/commands/` | The workflow commands. |
+| <!-- src/ etc. --> | <!-- fill in as the codebase grows --> |
 
 ---
 
 ## Code Annotation Conventions
 
-> These decorators can appear in any file — source code, feature docs, or config. Claude scans for them during code review and acts on them in place.
+> Leave these anywhere — source, docs, config. Claude acts on them during `/annotations` and
+> flags any left unresolved during `/verify`.
 
-| Decorator | Intent | Claude's behavior |
+| Decorator | Intent | Claude's behaviour |
 |---|---|---|
-| `@TODO` | An action Claude should take | Execute the action if intent is clear. If ambiguous, or if a decision is required, prompt the user before acting. |
-| `@Q` | A question for Claude to answer | Answer in chat and discuss. Once resolved, replace the `@Q` comment with a permanent clarifying comment. |
+| `@TODO` | An action for Claude | Execute if the intent is unambiguous and the change is contained. Otherwise ask first. Remove once done. |
+| `@Q` | A question for Claude | Answer in chat, discuss, then **replace** the `@Q` with a permanent comment written for a future reader. |
+| `@ASSUMPTION` | Something taken as true without confirming | Check whether it still holds. If it does and it's load-bearing, make it a comment or an assertion. If it doesn't, report it as a bug. |
 
 **Rules:**
-- Never act on an `@TODO` that could have multiple valid interpretations without confirming first.
-- Never leave an `@Q` in place after the question is resolved — always replace it.
-- When replacing `@Q`, write a comment that would help a future reader, not one that references the conversation.
+- Never act on a `@TODO` with more than one valid reading without confirming.
+- Never leave a resolved `@Q` in place.
+- A replacement comment explains why the code is as it is — it never references the conversation.
+- A `@TODO` that turns out to be a feature becomes a spec, not a code edit.
 
 ---
 
 ## Session Start Checklist
 
-When beginning a new session, Claude should:
 1. Read this file fully
-2. Read the current in-progress feature file if one exists
-3. Confirm current state understanding before writing any code
+2. Read `docs/CONSTITUTION.md`
+3. Read the active feature's `spec.md`, `plan.md`, `tasks.md` if one is in progress
+4. State your understanding of the current state and what's next — and flag anything in these
+   docs that contradicts what you see in the repo
+5. Wait for confirmation before writing code

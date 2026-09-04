@@ -1,0 +1,32 @@
+# Secrets — never commit these
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Claude Code local overrides (machine-specific permissions)
+.claude/settings.local.json
+
+# Dependencies / build output — extend for your stack
+node_modules/
+dist/
+build/
+target/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editors & OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs & coverage
+*.log
+coverage/
+.nyc_output/
